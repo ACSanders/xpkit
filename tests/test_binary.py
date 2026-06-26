@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 
 import numpy as np
+import pytest
 
 from xpkit import BinaryABResult, BinaryABTest
 
@@ -126,3 +127,37 @@ def test_relative_lift_nan_when_control_rate_zero():
         seed=1,
     ).run()
     assert math.isnan(result.relative_lift)
+
+
+@pytest.mark.parametrize("margin", [0.0, 0.005, 0.02])
+def test_no_harm_and_harm_above_are_complementary(margin):
+    result = build().run()
+    total = result.prob_no_harm(margin) + result.prob_harm_above(margin)
+    assert total == pytest.approx(1.0)
+
+
+@pytest.mark.parametrize("margin", [0.0, 0.005, 0.02])
+def test_no_harm_and_harm_above_in_unit_range(margin):
+    result = build().run()
+    assert 0.0 <= result.prob_no_harm(margin) <= 1.0
+    assert 0.0 <= result.prob_harm_above(margin) <= 1.0
+
+
+def test_prob_no_harm_non_decreasing_in_margin():
+    result = build().run()
+    assert result.prob_no_harm(0.0) <= result.prob_no_harm(0.005)
+    assert result.prob_no_harm(0.005) <= result.prob_no_harm(0.02)
+
+
+def test_prob_harm_above_non_increasing_in_margin():
+    result = build().run()
+    assert result.prob_harm_above(0.0) >= result.prob_harm_above(0.005)
+    assert result.prob_harm_above(0.005) >= result.prob_harm_above(0.02)
+
+
+def test_no_harm_methods_reject_invalid_margin():
+    result = build().run()
+    with pytest.raises(ValueError):
+        result.prob_no_harm(-0.1)
+    with pytest.raises(ValueError):
+        result.prob_harm_above(-0.1)

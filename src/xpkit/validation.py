@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 
 def validate_count(name: str, value: int) -> None:
     """Validate a non-negative integer count."""
@@ -66,3 +68,13 @@ def validate_seed(value: int | None) -> None:
         raise ValueError(f"seed must be None or an integer, got {value!r}.")
     if value < 0:
         raise ValueError(f"seed must be >= 0, got {value}.")
+
+
+def validate_margin(value: float) -> None:
+    """Validate a non-negative, finite do-no-harm margin."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"margin must be a number, got {value!r}.")
+    if not math.isfinite(value):
+        raise ValueError(f"margin must be finite, got {value}.")
+    if value < 0:
+        raise ValueError(f"margin must be >= 0, got {value}.")

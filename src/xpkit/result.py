@@ -9,6 +9,8 @@ import math
 
 import numpy as np
 
+from . import validation
+
 
 def _format_percent(x: float, digits: int = 2) -> str:
     """Format a proportion as a percent string."""
@@ -72,6 +74,27 @@ class BinaryABResult:
     def prob_lift_above(self, threshold: float) -> float:
         """Return the posterior probability that lift is above a threshold."""
         return float(np.mean(self.lift_samples > threshold))
+
+    def prob_no_harm(self, margin: float = 0.0) -> float:
+        """Posterior probability that Treatment B does no harm beyond ``margin``.
+
+        Computes ``P(lift >= -margin | data)``, where lift is
+        ``treatment_rate - control_rate``. ``margin`` is in raw decimal units, so
+        ``margin=0.005`` means "Treatment B is not worse than Control A by more
+        than 0.5 percentage points". With ``margin=0.0`` this is the probability
+        that lift is at least zero.
+        """
+        validation.validate_margin(margin)
+        return float(np.mean(self.lift_samples >= -margin))
+
+    def prob_harm_above(self, margin: float = 0.0) -> float:
+        """Posterior probability that Treatment B is harmful beyond ``margin``.
+
+        Computes ``P(lift < -margin | data)``, the exact complement of
+        :meth:`prob_no_harm` for the same ``margin``.
+        """
+        validation.validate_margin(margin)
+        return float(np.mean(self.lift_samples < -margin))
 
     def plot_lift_distribution(
         self,

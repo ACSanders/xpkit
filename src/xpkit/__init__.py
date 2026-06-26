@@ -9,6 +9,6 @@ from __future__ import annotations
 from .binary import BinaryABTest
 from .result import BinaryABResult
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = ["BinaryABTest", "BinaryABResult", "__version__"]

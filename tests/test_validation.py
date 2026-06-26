@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from xpkit import BinaryABTest
+from xpkit.validation import validate_margin
 
 
 def make(**overrides):
@@ -56,3 +57,17 @@ def test_keyword_only_arguments_enforced():
     # Priors and later args must be passed by keyword.
     with pytest.raises(TypeError):
         BinaryABTest.from_counts(120, 1000, 145, 1000, 1, 1)  # type: ignore[misc]
+
+
+@pytest.mark.parametrize("value", [0, 0.005])
+def test_validate_margin_accepts_valid(value):
+    validate_margin(value)  # should not raise
+
+
+@pytest.mark.parametrize(
+    "value",
+    [-0.1, True, "x", float("nan"), float("inf"), float("-inf")],
+)
+def test_validate_margin_rejects_invalid(value):
+    with pytest.raises(ValueError):
+        validate_margin(value)

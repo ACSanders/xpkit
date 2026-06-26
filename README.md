@@ -12,6 +12,14 @@ Install from PyPI:
 pip install xpkit
 ```
 
+## Development install
+
+To work on the package locally (with the test dependencies):
+
+```bash
+pip install -e ".[dev]"
+```
+
 ## Quickstart
 
 ```python
@@ -37,6 +45,17 @@ print(result.prob_lift_above(0.01))
 
 `prob_lift_above(0.01)` gives the posterior probability that Treatment B improves
 the metric by more than 1 percentage point.
+
+### Do-no-harm checks
+
+`prob_no_harm(margin)` gives the posterior probability that Treatment B is **not**
+worse than Control A by more than `margin` (in raw decimal units, so `0.005` means
+0.5 percentage points). `prob_harm_above(margin)` is its complement.
+
+```python
+result.prob_no_harm(0.005)     # P(lift >= -0.005): B is not worse by more than 0.5pp
+result.prob_harm_above(0.005)  # P(lift <  -0.005): B is worse by more than 0.5pp
+```
 
 Raw result values are also available:
 
@@ -74,7 +93,9 @@ In product A/B testing terms:
 - **Positive lift means Treatment B is better than Control A.**
 - **Negative lift means Control A is better than Treatment B.**
 
-## Scope (v0.1)
+## Scope
+
+Current package scope:
 
 - Binary proportions only.
 - Aggregate counts only.
@@ -84,6 +105,7 @@ In product A/B testing terms:
 - Equal-tailed credible interval.
 - Expected loss.
 - Practical lift thresholds.
+- Do-no-harm probabilities using a user-defined harm margin.
 - Simple plots.
 
 ## Development

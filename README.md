@@ -4,10 +4,12 @@ A lightweight Python toolkit for **binary A/B experiment analysis** using
 aggregate count data. Version 0.1 combines frequentist and Bayesian summaries
 for binary proportions.
 
-## Install (development)
+## Install
+
+Install from PyPI:
 
 ```bash
-pip install -e ".[dev]"
+pip install xpkit
 ```
 
 ## Quickstart

@@ -4,20 +4,41 @@ build-backend = "hatchling.build"
 
 [project]
 name = "abtestwise"
-version = "0.1.0"
+version = "0.1.1"
 description = "Lightweight toolkit for binary A/B experiment analysis using aggregate counts."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 keywords = ["ab-testing", "experimentation", "statistics", "bayesian", "frequentist"]
 dependencies = [
-    "numpy>=1.22",
-    "scipy>=1.8",
-    "matplotlib>=3.5",
+"numpy>=1.22",
+"scipy>=1.8",
+"matplotlib>=3.5",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+"/src/abtestwise",
+"/tests",
+"/README.md",
+"/pyproject.toml",
+]
+exclude = [
+"/.venv",
+"/.pypitest",
+"/.testpypi",
+"/.wheeltest",
+"/.abtestwise-testpypi",
+"/.abtestwise-testpypi-011",
+"/.abtestwise-pypi",
+"/.pytest_cache",
+"/dist",
+"/build",
+"*.egg-info",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/abtestwise"]
